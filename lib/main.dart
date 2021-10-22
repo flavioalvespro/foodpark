@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import './screens/tenants/tenants_page.dart';
+import './screens/auth/register_page.dart';
 import './screens/auth/login_page.dart';
 
 void main() => runApp(FoodPark());
@@ -15,7 +18,12 @@ class FoodPark extends StatelessWidget{
         accentColor: Colors.black,
         brightness: Brightness.dark
       ),
-      home: LoginScreen(),
+      initialRoute: '/login',
+      routes: <String, WidgetBuilder>{
+        '/login': (context) => LoginScreen(),
+        '/register': (context) => RegisterScreen(),
+        '/tenants': (context) => TenantsPage()
+      },
     );
   }
 

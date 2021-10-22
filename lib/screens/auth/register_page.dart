@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import './register_page.dart';
+
+import './login_page.dart';
 import './widgets/head_auth.dart';
 
-class LoginScreen extends StatelessWidget {
-
+class RegisterScreen extends StatelessWidget {
   double _deviceWidth = 0;
   double _deviceHeight = 0;
 
@@ -56,6 +56,7 @@ class LoginScreen extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
+          _nameTextField(context),
           _emailTextField(context),
           _passwordTextField(context)
         ],
@@ -63,10 +64,33 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
+  Widget _nameTextField(context) {
+    return TextFormField(
+      autocorrect: false,
+      autofocus: false,
+      style: TextStyle(color: Theme.of(context).primaryColor),
+      cursorColor: Theme.of(context).primaryColor,
+      decoration: InputDecoration(
+        border: UnderlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).primaryColor)
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).primaryColor)
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).primaryColor)
+        ),
+        contentPadding: EdgeInsets.all(10),
+        hintText: 'Nome',
+        hintStyle: TextStyle(color: Theme.of(context).primaryColor)
+      ),
+    );
+  }
+  
   Widget _emailTextField(context) {
     return TextFormField(
       autocorrect: false,
-      autofocus: true,
+      autofocus: false,
       style: TextStyle(color: Theme.of(context).primaryColor),
       cursorColor: Theme.of(context).primaryColor,
       decoration: InputDecoration(
@@ -111,10 +135,11 @@ class LoginScreen extends StatelessWidget {
       width: _deviceWidth,
       child: MaterialButton(
         onPressed: () {
+          print('registrando');
           Navigator.pushReplacementNamed(context, '/tenants');
         },
         color: Theme.of(context).primaryColor,
-        child: Text('Login'),
+        child: Text('Cadastrar'),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15)
         ),
@@ -126,14 +151,15 @@ class LoginScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Navigator.of(context).pushReplacement(
-        //   MaterialPageRoute(builder: (context) => RegisterScreen())
+        //   MaterialPageRoute(builder: (context) => LoginScreen())
         // );
-        Navigator.pushReplacementNamed(context, '/register');
+        Navigator.pushReplacementNamed(context, '/login');
       },
-      child: Text('Cadastrar-se', style: TextStyle(
+      child: Text('Já é cadastrado ? Faça Login', style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontSize: 18.2
               ),),
       );
   }
+
 }
