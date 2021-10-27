@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import './screens/tenants/tenants_page.dart';
 import './screens/auth/register_page.dart';
 import './screens/auth/login_page.dart';
+import './screens/products/products_page.dart';
 
 void main() => runApp(FoodPark());
 
@@ -22,7 +23,8 @@ class FoodPark extends StatelessWidget{
       routes: <String, WidgetBuilder>{
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
-        '/tenants': (context) => TenantsPage()
+        '/tenants': (context) => TenantsPage(),
+        '/products': (context) => ProductsScreen()
       },
     );
   }
