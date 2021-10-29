@@ -20,7 +20,16 @@ class BottomNavigator extends StatelessWidget {
           Icon(Icons.supervised_user_circle)
         ],
         onTap: (index) {
-
+          switch (index) {
+            case 1:
+                Navigator.pushReplacementNamed(context, '/orders');
+              break;
+            case 2:
+                Navigator.pushReplacementNamed(context, '/cart');
+              break;
+            default:
+                Navigator.pushReplacementNamed(context, '/tenants');
+          }
         },
       );
   }
