@@ -62,7 +62,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         itemCount: _products.length,
         itemBuilder: (context, index) {
           final Product product = _products[index];
-          return ProductCard(identify: product.identify, title: product.title, price: product.price, description: product.description, image: product.image);
+          return ProductCard(identify: product.identify, title: product.title, price: product.price, description: product.description, image: product.image, showIconCart: false);
         }
       ),
     );

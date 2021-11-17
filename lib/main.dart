@@ -6,6 +6,8 @@ import './screens/auth/login_page.dart';
 import './screens/products/products_page.dart';
 import './screens/cart/cart_page.dart';
 import './screens/orders/orders_page.dart';
+import './screens/orders/order_detail.dart';
+import './screens/orders/evaluation_order.dart';
 
 void main() => runApp(FoodPark());
 
@@ -28,7 +30,9 @@ class FoodPark extends StatelessWidget{
         '/tenants': (context) => TenantsPage(),
         '/products': (context) => ProductsScreen(),
         '/cart': (context) => CartPage(),
-        '/orders': (context) => OrdersScreen()
+        '/orders': (context) => OrdersScreen(),
+        '/order-details': (context) => OrderDetailsScreen(),
+        '/evaluation-order': (context) => EvaluationScreen()
       },
     );
   }

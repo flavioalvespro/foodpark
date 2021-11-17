@@ -74,7 +74,7 @@ class OrdersScreen extends StatelessWidget {
         data: IconThemeData(color: Theme.of(context).primaryColor)
       ),
       onTap: () {
-        print('yoga flame');
+        Navigator.pushNamed(context, '/order-details');
       },
     );
   }
