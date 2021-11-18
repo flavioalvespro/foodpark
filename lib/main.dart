@@ -8,6 +8,7 @@ import './screens/cart/cart_page.dart';
 import './screens/orders/orders_page.dart';
 import './screens/orders/order_detail.dart';
 import './screens/orders/evaluation_order.dart';
+import './screens/profile/profile_page.dart';
 
 void main() => runApp(FoodPark());
 
@@ -32,7 +33,8 @@ class FoodPark extends StatelessWidget{
         '/cart': (context) => CartPage(),
         '/orders': (context) => OrdersScreen(),
         '/order-details': (context) => OrderDetailsScreen(),
-        '/evaluation-order': (context) => EvaluationScreen()
+        '/evaluation-order': (context) => EvaluationScreen(),
+        '/profile': (context) => ProfilePage()
       },
     );
   }
