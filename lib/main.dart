@@ -9,6 +9,7 @@ import './screens/orders/orders_page.dart';
 import './screens/orders/order_detail.dart';
 import './screens/orders/evaluation_order.dart';
 import './screens/profile/profile_page.dart';
+import './screens/speech/speech_page.dart';
 
 void main() => runApp(FoodPark());
 
@@ -24,8 +25,9 @@ class FoodPark extends StatelessWidget{
         accentColor: Colors.black,
         brightness: Brightness.dark
       ),
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: <String, WidgetBuilder>{
+        '/': (context) => SpeechScreen(),
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
         '/tenants': (context) => TenantsPage(),

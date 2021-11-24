@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../models/Tenant.dart';
 import './widgets/TenantCard.dart';
@@ -24,6 +25,9 @@ class _TenantsPageState extends State<TenantsPage> {
 
   @override
   Widget build(BuildContext context) {
+    //coloca as features do sistema operacional visto que tirei na tela de splash screen
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(

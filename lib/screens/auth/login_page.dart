@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import './register_page.dart';
 import './widgets/head_auth.dart';
@@ -10,6 +11,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //coloca as features do sistema operacional visto que tirei na tela de splash screen
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
 
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
