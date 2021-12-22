@@ -1,19 +1,19 @@
 import 'dart:convert';
 
-class Category {
+class CategoryProduct {
 
   String identify;
   String name;
   String description;
 
-  Category({
+  CategoryProduct({
     required this.identify,
     required this.name,
     required this.description,
   });
 
-  factory Category.fromJson(jsonData) {
-    return Category(
+  factory CategoryProduct.fromJson(jsonData) {
+    return CategoryProduct(
       identify: jsonData['identify'],
       name: jsonData['name'],
       description: jsonData['description'],

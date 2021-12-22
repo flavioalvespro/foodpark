@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/Category.dart';
+import '../../../models/CategoryProduct.dart';
 
 class Categories extends StatelessWidget {
-  List<Category> _categories;
+  List<CategoryProduct> _categories;
 
   Categories(this._categories);
 
@@ -21,13 +21,13 @@ class Categories extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: _categories.length,
         itemBuilder: (context, index) {
-          final Category category = _categories[index];
+          final CategoryProduct category = _categories[index];
           return _buildCategory(category);
         },
       ),
     );
   }
-  Widget _buildCategory(Category category)
+  Widget _buildCategory(CategoryProduct category)
   {
     return Container(
       padding: EdgeInsets.only(top: 2, bottom: 2, left: 20, right: 20),

@@ -88,7 +88,7 @@ class OrderDetailsScreen extends StatelessWidget {
         itemCount: _order.products.length,
         itemBuilder: (context, index) {
           final Product product = _order.products[index];
-          return ProductCard(identify: product.identify, title: product.title, description: product.description, price: product.price, image: product.image, showIconCart: true);
+          return ProductCard(product: product, showIconCart: true);
         }
       ),
     );

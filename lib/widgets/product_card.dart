@@ -1,23 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:foodpark/models/Product.dart';
+import 'package:foodpark/stores/products.store.dart';
 
 class ProductCard extends StatelessWidget {
-  String identify;
-  String title;
-  String description;
-  String price;
-  String image;
+
   bool showIconCart;
+  Product product;
+  ProductsStore storeProducts = new ProductsStore();
 
   // ignore: non_constant_identifier_names
   ProductCard({
-      required this.identify,
-      required this.title,
-      required this.description,
-      required this.price,
-      required this.image, 
       required this.showIconCart,
+      required this.product
     });
 
   @override
@@ -51,7 +46,7 @@ class ProductCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
           Text(
-            title,
+            product.title,
             style: TextStyle(
                 color: Colors.black54,
                 fontSize: 16,
@@ -59,7 +54,7 @@ class ProductCard extends StatelessWidget {
           ),
           Container(height: 5),
           Text(
-            description,
+            product.description,
             style: TextStyle(
                 color: Colors.black38,
                 fontSize: 12,
@@ -67,7 +62,7 @@ class ProductCard extends StatelessWidget {
           ),
           Container(height: 7),
           Text(
-            "R\$ $price",
+            "R\$ $product.price",
             style: TextStyle(
                 color: Colors.black38,
                 fontSize: 12,
@@ -84,8 +79,8 @@ class ProductCard extends StatelessWidget {
       child: ClipOval(
         //child: Image.asset('assets/images/IconeFlutterFood.png'),
         child: CachedNetworkImage(
-          imageUrl: image != ''
-              ? image
+          imageUrl: product.image != ''
+              ? product.image
               : 'https://cdn.iconscout.com/icon/free/png-256/restaurant-1495593-1267764.png',
           placeholder: (context, url) => Container(
             height: 80,
@@ -105,9 +100,15 @@ class ProductCard extends StatelessWidget {
   Widget _buildButtonCart(context) {
     return this.showIconCart ? Container() : Container(
       child: IconTheme(
-        data: IconThemeData(color: Theme.of(context).primaryColor),
-        child: Icon(Icons.shopping_cart),
-      ),
+            data: IconThemeData(color: Theme.of(context).primaryColor),
+            child: storeProducts.inProductCart(product) ? GestureDetector(
+              onTap: () => storeProducts.removeProductCart(product),
+              child: Icon(Icons.remove_shopping_cart),
+            ) : GestureDetector(
+              onTap: () => storeProducts.addProductCart(product),
+              child: Icon(Icons.shopping_cart),
+            ),
+          ),
     );
   }
 }

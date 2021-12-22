@@ -16,7 +16,7 @@ class BottomNavigator extends StatelessWidget {
         items: <Widget>[
           Icon(Icons.home),
           Icon(Icons.list),
-          Icon(Icons.shopping_cart),
+          _iconCart(),
           Icon(Icons.supervised_user_circle)
         ],
         onTap: (index) {
@@ -38,5 +38,32 @@ class BottomNavigator extends StatelessWidget {
           }
         },
       );
+  }
+
+  Widget _iconCart() {
+    return Stack(
+      children: [
+        Icon(Icons.shopping_cart),
+        Positioned(
+          right: 0,
+          child: Container(
+            padding: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.circular(6)
+            ),
+            constraints: BoxConstraints(
+              minHeight: 12,
+              minWidth: 12
+            ),
+            child: Text(
+              '0', 
+              style: TextStyle(color: Colors.white),
+              textAlign: TextAlign.center
+            ),
+          ),
+        )
+      ],
+    );
   }
 }

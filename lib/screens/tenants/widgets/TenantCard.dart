@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:foodpark/models/Tenant.dart';
 
 class TenantCard extends StatelessWidget {
-  final String uuid;
-  final String name;
-  final String image;
-  final String contact;
+  final Tenant tenant;
 
-  const TenantCard(
-      {required this.uuid,
-      required this.name,
-      required this.image,
-      required this.contact});
+  const TenantCard(this.tenant);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, '/products');
+          Navigator.pushNamed(context, '/products', arguments: tenant);
         },
         child: Card(
           elevation: 2.5,
@@ -38,8 +32,8 @@ class TenantCard extends StatelessWidget {
                     child: ClipOval(
                       //child: Image.asset('assets/images/IconeFlutterFood.png'),
                       child: CachedNetworkImage(
-                        imageUrl: image != ''
-                            ? image
+                        imageUrl: tenant.image != ''
+                            ? tenant.image
                             : 'https://cdn.iconscout.com/icon/free/png-256/restaurant-1495593-1267764.png',
                         placeholder: (context, url) => Container(
                           height: 80,
@@ -56,7 +50,7 @@ class TenantCard extends StatelessWidget {
                   ),
                   VerticalDivider(color: Colors.black54),
                   Expanded(
-                      child: Text(name,
+                      child: Text(tenant.name,
                           style: TextStyle(
                               color: Colors.black54,
                               fontWeight: FontWeight.bold)))
