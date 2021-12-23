@@ -24,6 +24,21 @@ mixin _$ProductsStore on _ProductsStoreBase, Store {
     });
   }
 
+  final _$cartItemsAtom = Atom(name: '_ProductsStoreBase.cartItems');
+
+  @override
+  ObservableList<Product> get cartItems {
+    _$cartItemsAtom.reportRead();
+    return super.cartItems;
+  }
+
+  @override
+  set cartItems(ObservableList<Product> value) {
+    _$cartItemsAtom.reportWrite(value, super.cartItems, () {
+      super.cartItems = value;
+    });
+  }
+
   final _$isLoadingAtom = Atom(name: '_ProductsStoreBase.isLoading');
 
   @override
@@ -106,9 +121,54 @@ mixin _$ProductsStore on _ProductsStoreBase, Store {
   }
 
   @override
+  void addProductCart(Product product) {
+    final _$actionInfo = _$_ProductsStoreBaseActionController.startAction(
+        name: '_ProductsStoreBase.addProductCart');
+    try {
+      return super.addProductCart(product);
+    } finally {
+      _$_ProductsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeProductCart(Product product) {
+    final _$actionInfo = _$_ProductsStoreBaseActionController.startAction(
+        name: '_ProductsStoreBase.removeProductCart');
+    try {
+      return super.removeProductCart(product);
+    } finally {
+      _$_ProductsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void clearCart() {
+    final _$actionInfo = _$_ProductsStoreBaseActionController.startAction(
+        name: '_ProductsStoreBase.clearCart');
+    try {
+      return super.clearCart();
+    } finally {
+      _$_ProductsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  bool inProductCart(Product product) {
+    final _$actionInfo = _$_ProductsStoreBaseActionController.startAction(
+        name: '_ProductsStoreBase.inProductCart');
+    try {
+      return super.inProductCart(product);
+    } finally {
+      _$_ProductsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 products: ${products},
+cartItems: ${cartItems},
 isLoading: ${isLoading}
     ''';
   }

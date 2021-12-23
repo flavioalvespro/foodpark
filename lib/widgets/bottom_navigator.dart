@@ -1,5 +1,8 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:foodpark/stores/products.store.dart';
+import 'package:provider/provider.dart';
 
 class BottomNavigator extends StatelessWidget {
   int _active_item = 0;
@@ -16,7 +19,7 @@ class BottomNavigator extends StatelessWidget {
         items: <Widget>[
           Icon(Icons.home),
           Icon(Icons.list),
-          _iconCart(),
+          _iconCart(context),
           Icon(Icons.supervised_user_circle)
         ],
         onTap: (index) {
@@ -40,7 +43,9 @@ class BottomNavigator extends StatelessWidget {
       );
   }
 
-  Widget _iconCart() {
+  Widget _iconCart(context) {
+    final storeProducts = Provider.of<ProductsStore>(context);
+
     return Stack(
       children: [
         Icon(Icons.shopping_cart),
@@ -56,10 +61,14 @@ class BottomNavigator extends StatelessWidget {
               minHeight: 12,
               minWidth: 12
             ),
-            child: Text(
-              '0', 
-              style: TextStyle(color: Colors.white),
-              textAlign: TextAlign.center
+            child: Observer(
+              builder: (_) {
+                return Text(
+                  storeProducts.cartItems.length.toString(), 
+                  style: TextStyle(color: Colors.white),
+                  textAlign: TextAlign.center
+                );
+              }
             ),
           ),
         )

@@ -1,17 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:foodpark/models/Product.dart';
 import 'package:foodpark/stores/products.store.dart';
+import 'package:provider/provider.dart';
 
 class ProductCard extends StatelessWidget {
 
   bool showIconCart;
   Product product;
-  ProductsStore storeProducts = new ProductsStore();
 
   // ignore: non_constant_identifier_names
   ProductCard({
-      required this.showIconCart,
+      this.showIconCart = false,
       required this.product
     });
 
@@ -98,15 +99,21 @@ class ProductCard extends StatelessWidget {
   }
 
   Widget _buildButtonCart(context) {
+    final storeProducts = Provider.of<ProductsStore>(context);
+    
     return this.showIconCart ? Container() : Container(
       child: IconTheme(
             data: IconThemeData(color: Theme.of(context).primaryColor),
-            child: storeProducts.inProductCart(product) ? GestureDetector(
+            child: Observer(
+              builder: (_) {
+                return storeProducts.inProductCart(product) ? GestureDetector(
               onTap: () => storeProducts.removeProductCart(product),
               child: Icon(Icons.remove_shopping_cart),
             ) : GestureDetector(
               onTap: () => storeProducts.addProductCart(product),
               child: Icon(Icons.shopping_cart),
+            );
+              }
             ),
           ),
     );

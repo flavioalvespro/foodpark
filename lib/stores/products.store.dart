@@ -69,12 +69,14 @@ abstract class _ProductsStoreBase with Store {
   @action
   void addProductCart(Product product)
   {
+    print('contain: ${cartItems.contains(product)}');
     cartItems.add(product);
   }
 
   @action
   void removeProductCart(Product product)
   {
+    print('contain remove: ${cartItems.contains(product)}');
     cartItems.remove(product);
   }
 
@@ -87,6 +89,7 @@ abstract class _ProductsStoreBase with Store {
   @action
   bool inProductCart(Product product)
   {
+    print('contain: ${cartItems.contains(product)}');
     return cartItems.contains(product);
   }
 }

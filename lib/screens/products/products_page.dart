@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:foodpark/stores/categories.store.dart';
 import 'package:foodpark/stores/products.store.dart';
 import 'package:foodpark/widgets/custom_ciscular_progress_indicator.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/CategoryProduct.dart';
 import '../../models/Product.dart';
@@ -19,14 +20,18 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
+
   late Tenant _tenant;
-  ProductsStore storeProduct = new ProductsStore();
-  CategoriesStore storeCategories = new CategoriesStore();
+  late ProductsStore storeProduct;
+  late CategoriesStore storeCategories;
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+
+    storeProduct = Provider.of<ProductsStore>(context);
+    storeCategories = Provider.of<CategoriesStore>(context);
 
     RouteSettings settings = ModalRoute.of(context)!.settings;
     _tenant = settings.arguments as Tenant;
@@ -73,9 +78,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               itemCount: storeProduct.products.length,
               itemBuilder: (context, index) {
                 final Product product = storeProduct.products[index];
-                return ProductCard(
-                    product: product,
-                    showIconCart: false);
+                return ProductCard(product: product);
               }),
     );
   }
