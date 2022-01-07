@@ -73,8 +73,10 @@ mixin _$ProductsStore on _ProductsStoreBase, Store {
       AsyncAction('_ProductsStoreBase.getProducts');
 
   @override
-  Future<dynamic> getProducts(String tokenCompany) {
-    return _$getProductsAsyncAction.run(() => super.getProducts(tokenCompany));
+  Future<dynamic> getProducts(String tokenCompany,
+      {List<String>? filterCategories}) {
+    return _$getProductsAsyncAction.run(() =>
+        super.getProducts(tokenCompany, filterCategories: filterCategories));
   }
 
   final _$_ProductsStoreBaseActionController =

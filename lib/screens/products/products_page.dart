@@ -4,6 +4,7 @@ import 'package:foodpark/stores/categories.store.dart';
 import 'package:foodpark/stores/products.store.dart';
 import 'package:foodpark/stores/tenant.store.dart';
 import 'package:foodpark/widgets/custom_ciscular_progress_indicator.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/CategoryProduct.dart';
@@ -26,6 +27,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   late ProductsStore storeProduct;
   late CategoriesStore storeCategories;
   late TenantsStore storeTenants;
+  late ReactionDisposer disposer;
 
   @override
   void didChangeDependencies() {
@@ -39,9 +41,25 @@ class _ProductsScreenState extends State<ProductsScreen> {
     RouteSettings settings = ModalRoute.of(context)!.settings;
     _tenant = settings.arguments as Tenant;
     
+    disposer = reaction(
+      (_) => storeCategories.filterChanged,
+      (filterChanged) async {
+        if(!storeCategories.isLoading && !storeProduct.isLoading) {
+          await storeProduct.getProducts(_tenant.uuid, filterCategories: storeCategories.filtersCategory);
+        }
+      }
+    );
+
     storeTenants.setTenant(_tenant);
     storeCategories.getCategories(_tenant.uuid);
     storeProduct.getProducts(_tenant.uuid);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    disposer();
+    super.dispose();
   }
 
   @override
