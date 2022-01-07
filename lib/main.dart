@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodpark/stores/categories.store.dart';
 import 'package:foodpark/stores/products.store.dart';
+import 'package:foodpark/stores/tenant.store.dart';
 import 'package:provider/provider.dart';
 
 import './constants/app_theme.dart';
@@ -18,6 +19,9 @@ class FoodPark extends StatelessWidget{
         ),
         Provider<CategoriesStore>(
           create: (_) => CategoriesStore(),
+        ),
+        Provider<TenantsStore>(
+          create: (_) => TenantsStore(),
         )
       ],
       child: MaterialApp(

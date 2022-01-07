@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+
+import 'package:foodpark/models/Product.dart';
+import 'package:foodpark/stores/products.store.dart';
+import 'package:foodpark/stores/tenant.store.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/show_image_cached.dart';
 import '../../widgets/bottom_navigator.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({Key? key}) : super(key: key);
+  
+  late ProductsStore _productsStore;
+  late TenantsStore _tenantsStore;
 
   @override
   Widget build(BuildContext context) {
+
+    _productsStore = Provider.of<ProductsStore>(context);
+    _tenantsStore = Provider.of<TenantsStore>(context);
+
+    final String titlePage = _tenantsStore.tenant != null ? "Carrinho - ${_tenantsStore.tenant!.name}" : 'Carrinho';
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: Text('Meu Carrinho'),
+        title: Text(titlePage),
         centerTitle: true,
       ),
       body: _buildContentCart(context),
@@ -37,25 +51,34 @@ class CartPage extends StatelessWidget {
 
   Widget _buildHeader()
   {
-    return Container(
+    return Observer(
+      builder: (context) => Container(
       alignment: Alignment.topLeft,
       margin: EdgeInsets.all(16),
-      child: Text("Total (3) Itens", style: TextStyle(color: Colors.black),),
+      child: Text("Total (${_productsStore.cartItems.length}) Itens", style: TextStyle(color: Colors.black),),
+    ),
     );
   }
 
   Widget _buildCartList(context)
   {
-    return ListView.builder(
+    return Observer(
+      builder: (context) => ListView.builder(
         shrinkWrap: false,
         primary: true,
-        itemCount: 6,
-        itemBuilder: (context, index) => _buildCartItem(context),
-      );
+        itemCount: _productsStore.cartItems.length,
+        itemBuilder: (context, index) {
+          final Map<String, dynamic> itemCart = _productsStore.cartItems[index];
+          return _buildCartItem(itemCart, context);
+        },
+      ),
+    );
   }
 
-  Widget _buildCartItem(context)
+  Widget _buildCartItem(Map<String, dynamic> itemCart, context)
   {
+    final Product product = itemCart['product'];
+
     return Stack(
       children: <Widget>[
         Container(
@@ -70,15 +93,22 @@ class CartPage extends StatelessWidget {
             padding: EdgeInsets.all(2),
             child: Row(
               children: <Widget>[
-                ShowImageCached('https://cdn.iconscout.com/icon/free/png-256/restaurant-1495593-1267764.png'),
-                _showDetailItemCart(context)
+                ShowImageCached(
+                  product.image != null ? product.image :
+                  'https://cdn.iconscout.com/icon/free/png-256/restaurant-1495593-1267764.png'
+                ),
+                _showDetailItemCart(product, itemCart, context)
               ],
           ),
           ),
         ),
         Align(
           alignment: Alignment.topRight,
-          child: Container(
+          child: GestureDetector(
+            onTap: () => {
+              _productsStore.removeProductCart(product)
+            },
+            child: Container(
             height: 24,
             width: 24,
             margin: EdgeInsets.only(top: 2, right: 4),
@@ -88,20 +118,22 @@ class CartPage extends StatelessWidget {
             ),
             child: Icon(Icons.close, size: 20, color: Colors.white,),
           ),
+          ),
         )
       ],
     );
   }
 
-  Widget _showDetailItemCart(context)
+  Widget _showDetailItemCart(Product product, Map<String, dynamic> itemCart, context)
   {
     return Expanded(
-      child: Container(
+      child: Observer(
+        builder: (context) => Container(
         padding: EdgeInsets.only(top: 5, right: 4, left: 4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('Pizza Grande', style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor), maxLines: 2,),
+            Text(product.title, style: TextStyle(fontSize: 14, color: Theme.of(context).primaryColor), maxLines: 2,),
             Container(
               height: 6,
             ),
@@ -109,19 +141,29 @@ class CartPage extends StatelessWidget {
               margin: EdgeInsets.only(right: 20),
               child: Row(
                 children: <Widget>[
-                  Text("R\$ 48.88", style: TextStyle(color: Colors.green)),
+                  Text("R\$ ${product.price}", style: TextStyle(color: Colors.green)),
                   Expanded(
                     child: Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          Icon(Icons.remove, size: 24, color: Colors.grey.shade700,),
+                          GestureDetector(
+                            onTap: () => {
+                              _productsStore.decrementProductCart(product)
+                            },
+                            child: Icon(Icons.remove, size: 24, color: Colors.grey.shade700,),
+                          ),
                           Container(
                             padding: EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 12),
                             color: Theme.of(context).primaryColor,
-                            child: Text('2', style: TextStyle(color: Colors.white),),
+                            child: Text(itemCart['qty'].toString(), style: TextStyle(color: Colors.white),),
                           ),
-                          Icon(Icons.add, size: 24, color: Colors.grey.shade700,)
+                          GestureDetector(
+                            onTap: () => {
+                              _productsStore.incrementProductCart(product)
+                            },
+                            child: Icon(Icons.add, size: 24, color: Colors.grey.shade700,),
+                          )
                         ],
                       ),
                     )
@@ -132,14 +174,19 @@ class CartPage extends StatelessWidget {
           ],
         )
       )
+       )
     );
   }
 
   Widget _buildTextTotalCart()
   {
-    return Container(
+    return Observer(
+      builder: (context) => 
+        Container(
       margin: EdgeInsets.only(top: 5, bottom: 5),
-      child: Text("Preço Total: R\$ 49,99", style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),
+      child: Text("Preço Total: R\$ ${_productsStore.totalCart}", style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),
+    )
+      ,
     );
   }
 

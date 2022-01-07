@@ -14,7 +14,10 @@ abstract class _ProductsStoreBase with Store {
   ObservableList<Product> products = ObservableList<Product>();
 
   @observable
-  ObservableList<Product> cartItems = ObservableList<Product>();
+  List<Map<String, dynamic>> cartItems = [];
+
+  @observable
+  double totalCart = 0;
 
   @observable
   bool isLoading = false;
@@ -47,11 +50,15 @@ abstract class _ProductsStoreBase with Store {
   void clearProducts() {
     products.clear();
 
-    products = products;
+    calcTotalCart();
   }
 
   @action
   Future getProducts(String tokenCompany) async {
+
+    clearProducts();
+    clearCart();
+    
     setLoading(true);
 
     final response = await _repository.getProducts(tokenCompany);
@@ -69,27 +76,82 @@ abstract class _ProductsStoreBase with Store {
   @action
   void addProductCart(Product product)
   {
-    print('contain: ${cartItems.contains(product)}');
-    cartItems.add(product);
+
+    if (inProductCart(product)) {
+      return incrementProductCart(product);
+    }
+
+    cartItems.add({
+      'identify': product.identify,
+      'qty': 1,
+      'product': product
+    });
+
+    calcTotalCart();
   }
 
   @action
   void removeProductCart(Product product)
   {
-    print('contain remove: ${cartItems.contains(product)}');
-    cartItems.remove(product);
+    cartItems.removeWhere((element) => element['identify'] == product.identify);
+
+    calcTotalCart();
   }
 
   @action
   void clearCart()
   {
     cartItems.clear();
+
+    calcTotalCart();
+  }
+
+  @action
+  void incrementProductCart(Product product)
+  {
+    final int index = cartItems.indexWhere((element) => element['identify'] == product.identify);
+
+    cartItems[index]['qty'] = cartItems[index]['qty'] + 1;
+
+    calcTotalCart();
+  }
+
+  @action
+  void decrementProductCart(Product product)
+  {
+    final int index = cartItems.indexWhere((element) => element['identify'] == product.identify);
+
+    cartItems[index]['qty'] = cartItems[index]['qty'] - 1;
+
+    if (cartItems[index]['qty'] == 0) {
+      return removeProductCart(product);
+    }
+
+    calcTotalCart();
   }
 
   @action
   bool inProductCart(Product product)
   {
-    print('contain: ${cartItems.contains(product)}');
-    return cartItems.contains(product);
+    final int index = cartItems.indexWhere((element) => element['identify'] == product.identify);
+
+    return index != -1;
+  }
+
+  @action
+  double calcTotalCart()
+  {
+    
+    double total = 0;
+
+    cartItems.map((element) => total += element['qty'] * double.parse(element['product'].price)).toList();
+
+    products = products;
+
+    cartItems = cartItems;
+    
+    totalCart = total;
+
+    return total;
   }
 }

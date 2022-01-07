@@ -108,7 +108,7 @@ class ProductCard extends StatelessWidget {
               builder: (_) {
                 return storeProducts.inProductCart(product) ? GestureDetector(
               onTap: () => storeProducts.removeProductCart(product),
-              child: Icon(Icons.remove_shopping_cart),
+              child: Icon(Icons.remove_shopping_cart, color: Colors.red,),
             ) : GestureDetector(
               onTap: () => storeProducts.addProductCart(product),
               child: Icon(Icons.shopping_cart),

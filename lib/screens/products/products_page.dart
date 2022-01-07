@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:foodpark/stores/categories.store.dart';
 import 'package:foodpark/stores/products.store.dart';
+import 'package:foodpark/stores/tenant.store.dart';
 import 'package:foodpark/widgets/custom_ciscular_progress_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +25,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   late Tenant _tenant;
   late ProductsStore storeProduct;
   late CategoriesStore storeCategories;
+  late TenantsStore storeTenants;
 
   @override
   void didChangeDependencies() {
@@ -32,10 +34,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
     storeProduct = Provider.of<ProductsStore>(context);
     storeCategories = Provider.of<CategoriesStore>(context);
+    storeTenants = Provider.of<TenantsStore>(context);
 
     RouteSettings settings = ModalRoute.of(context)!.settings;
     _tenant = settings.arguments as Tenant;
-
+    
+    storeTenants.setTenant(_tenant);
     storeCategories.getCategories(_tenant.uuid);
     storeProduct.getProducts(_tenant.uuid);
   }

@@ -27,15 +27,30 @@ mixin _$ProductsStore on _ProductsStoreBase, Store {
   final _$cartItemsAtom = Atom(name: '_ProductsStoreBase.cartItems');
 
   @override
-  ObservableList<Product> get cartItems {
+  List<Map<String, dynamic>> get cartItems {
     _$cartItemsAtom.reportRead();
     return super.cartItems;
   }
 
   @override
-  set cartItems(ObservableList<Product> value) {
+  set cartItems(List<Map<String, dynamic>> value) {
     _$cartItemsAtom.reportWrite(value, super.cartItems, () {
       super.cartItems = value;
+    });
+  }
+
+  final _$totalCartAtom = Atom(name: '_ProductsStoreBase.totalCart');
+
+  @override
+  double get totalCart {
+    _$totalCartAtom.reportRead();
+    return super.totalCart;
+  }
+
+  @override
+  set totalCart(double value) {
+    _$totalCartAtom.reportWrite(value, super.totalCart, () {
+      super.totalCart = value;
     });
   }
 
@@ -154,6 +169,28 @@ mixin _$ProductsStore on _ProductsStoreBase, Store {
   }
 
   @override
+  void incrementProductCart(Product product) {
+    final _$actionInfo = _$_ProductsStoreBaseActionController.startAction(
+        name: '_ProductsStoreBase.incrementProductCart');
+    try {
+      return super.incrementProductCart(product);
+    } finally {
+      _$_ProductsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void decrementProductCart(Product product) {
+    final _$actionInfo = _$_ProductsStoreBaseActionController.startAction(
+        name: '_ProductsStoreBase.decrementProductCart');
+    try {
+      return super.decrementProductCart(product);
+    } finally {
+      _$_ProductsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   bool inProductCart(Product product) {
     final _$actionInfo = _$_ProductsStoreBaseActionController.startAction(
         name: '_ProductsStoreBase.inProductCart');
@@ -165,10 +202,22 @@ mixin _$ProductsStore on _ProductsStoreBase, Store {
   }
 
   @override
+  double calcTotalCart() {
+    final _$actionInfo = _$_ProductsStoreBaseActionController.startAction(
+        name: '_ProductsStoreBase.calcTotalCart');
+    try {
+      return super.calcTotalCart();
+    } finally {
+      _$_ProductsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 products: ${products},
 cartItems: ${cartItems},
+totalCart: ${totalCart},
 isLoading: ${isLoading}
     ''';
   }
