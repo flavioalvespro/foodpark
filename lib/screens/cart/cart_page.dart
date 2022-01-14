@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'package:foodpark/models/Product.dart';
+import 'package:foodpark/stores/orders.store.dart';
 import 'package:foodpark/stores/products.store.dart';
 import 'package:foodpark/stores/tenant.store.dart';
 import 'package:provider/provider.dart';
@@ -12,12 +13,15 @@ class CartPage extends StatelessWidget {
   
   late ProductsStore _productsStore;
   late TenantsStore _tenantsStore;
+  late OrdersStore _ordersStore;
+  TextEditingController _commentController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
 
     _productsStore = Provider.of<ProductsStore>(context);
     _tenantsStore = Provider.of<TenantsStore>(context);
+    _ordersStore = Provider.of<OrdersStore>(context);
 
     final String titlePage = _tenantsStore.tenant != null ? "Carrinho - ${_tenantsStore.tenant!.name}" : 'Carrinho';
 
@@ -195,6 +199,7 @@ class CartPage extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10),
       child: TextFormField(
+        controller: _commentController,
         autocorrect: true,
         style: TextStyle(color: Theme.of(context).primaryColor),
         cursorColor: Theme.of(context).primaryColor,
@@ -224,13 +229,25 @@ class CartPage extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(left: 10, right: 10, bottom: 8),
       width: (MediaQuery.of(context).size.width - 8),
-      child: ElevatedButton(
+      child: Observer(
+        builder: (context) => ElevatedButton(
         onPressed: () {
-          print('checkout');
+          _ordersStore.isMakingOrder ? null : _makeOrder(context);
         },
-        child: Text('Finalizar Pedido'),
+        child: _ordersStore.isMakingOrder ? Text('Fazendo o Pedido...') : Text('Finalizar Pedido'),
         style: ElevatedButton.styleFrom(primary: Colors.orange[700], onPrimary: Colors.white, elevation: 4, shadowColor: Colors.black),
       ),
+      ),
     );
+  }
+
+  Future _makeOrder(context) async
+  {
+    await _ordersStore.makeOrder(_tenantsStore.tenant!.uuid, _productsStore.cartItems, _commentController.text);
+
+    _productsStore.clearCart();
+    _commentController.text = '';
+
+    Navigator.pushReplacementNamed(context, '/my-oders');
   }
 }
