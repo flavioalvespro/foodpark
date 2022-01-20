@@ -19,9 +19,9 @@ Future<dynamic> get(String url, {Map<String, dynamic>? queryParams}) async {
     }
   }
 
-  Future<dynamic> post(String url, {data, Map<String, dynamic>? queryParams}) async {
+  Future<dynamic> post(String url, {formData, Map<String, dynamic>? queryParams}) async {
     try {
-      final Response response = await _dio!.post(url, data: data, queryParameters: queryParams);
+      final Response response = await _dio!.post(url, data: formData, queryParameters: queryParams);
 
       return response;
     } catch (e) {

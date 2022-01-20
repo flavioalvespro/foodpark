@@ -248,6 +248,6 @@ class CartPage extends StatelessWidget {
     _productsStore.clearCart();
     _commentController.text = '';
 
-    Navigator.pushReplacementNamed(context, '/my-oders');
+    Navigator.pushReplacementNamed(context, '/my-orders');
   }
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:foodpark/stores/auth.store.dart';
+import 'package:provider/provider.dart';
 
 import './register_page.dart';
 import './widgets/head_auth.dart';
@@ -9,8 +12,14 @@ class LoginScreen extends StatelessWidget {
   double _deviceWidth = 0;
   double _deviceHeight = 0;
 
+  late AuthStore _authStore;
+  TextEditingController _email = new TextEditingController();
+  TextEditingController _password = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+
+    _authStore = Provider.of<AuthStore>(context);
     //coloca as features do sistema operacional visto que tirei na tela de splash screen
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
 
@@ -20,7 +29,9 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
-        child: _loginPageUI(context),
+        child: Observer(
+          builder: (context) => _loginPageUI(context),
+        ),
       ),
     );
   }
@@ -68,6 +79,7 @@ class LoginScreen extends StatelessWidget {
 
   Widget _emailTextField(context) {
     return TextFormField(
+      controller: _email,
       autocorrect: false,
       autofocus: true,
       style: TextStyle(color: Theme.of(context).primaryColor),
@@ -91,6 +103,7 @@ class LoginScreen extends StatelessWidget {
 
   Widget _passwordTextField(context) {
     return TextFormField(
+      controller: _password,
       autocorrect: false,
       autofocus: true,
       obscureText: true,
@@ -113,11 +126,9 @@ class LoginScreen extends StatelessWidget {
     return Container(
       width: _deviceWidth,
       child: MaterialButton(
-        onPressed: () {
-          Navigator.pushReplacementNamed(context, '/tenants');
-        },
+        onPressed: () => _authStore.isLoading ? null : auth(context),
         color: Theme.of(context).primaryColor,
-        child: Text('Login'),
+        child: Text(_authStore.isLoading ? 'Autenticando...' : 'Login'),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15)
         ),
@@ -138,5 +149,12 @@ class LoginScreen extends StatelessWidget {
                 fontSize: 18.2
               ),),
       );
+  }
+
+  Future auth(context) async
+  {
+    await _authStore.auth(_email.text, _password.text);
+
+    Navigator.pushReplacementNamed(context, '/tenants') ;
   }
 }

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:foodpark/stores/auth.store.dart';
 import 'package:foodpark/widgets/bottom_navigator.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  late AuthStore _authStore;
 
   @override
   Widget build(BuildContext context) {
+    _authStore = Provider.of<AuthStore>(context);
+
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
@@ -22,13 +26,13 @@ class ProfilePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            'Flávio Alves',
+            _authStore.user.name,
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 22),
           ),
           Container(height: 10),
           Text(
-            'flavioalves@faduc.com.br',
+            _authStore.user.email,
             style: TextStyle(color: Colors.black),
           ),
           Container(height: 10),
