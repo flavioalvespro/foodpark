@@ -38,10 +38,8 @@ class ProfilePage extends StatelessWidget {
           Container(height: 10),
           Container(
             child: ElevatedButton(
-              onPressed: () {
-                print('logout');
-              },
-              child: Text('Sair'),
+              onPressed: () => _authStore.isLoading ? null : logout(context),
+              child: Text(_authStore.isLoading ? 'Saindo...' : 'Sair'),
               style: ElevatedButton.styleFrom(
                   primary: Colors.red,
                   onPrimary: Colors.white,
@@ -52,5 +50,12 @@ class ProfilePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future logout(context) async 
+  {
+    await _authStore.logout();
+
+    Navigator.pushReplacementNamed(context, '/login');
   }
 }

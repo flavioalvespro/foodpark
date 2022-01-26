@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:foodpark/stores/auth.store.dart';
+import 'package:provider/provider.dart';
 
 class SpeechScreen extends StatefulWidget {
+  
   SpeechScreen({Key? key}) : super(key: key);
 
   @override
@@ -10,19 +14,28 @@ class SpeechScreen extends StatefulWidget {
 
 class _SpeechScreenState extends State<SpeechScreen> {
 
+  late AuthStore _authStore;
+  FlutterSecureStorage storage = new FlutterSecureStorage();
+
   @override
   void initState() {
     super.initState();
     
     SystemChrome.setEnabledSystemUIOverlays([]);
 
-    _checkAuth().then((value) => {
-      Navigator.pushReplacementNamed(context, '/login')
+    _checkAuth().then((bool isAuthenticated) {
+      if (isAuthenticated) {
+        Navigator.pushReplacementNamed(context, '/tenants');
+        return;
+      }
+
+      Navigator.pushReplacementNamed(context, '/login');
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    _authStore = Provider.of<AuthStore>(context);
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: Container(
@@ -47,9 +60,15 @@ class _SpeechScreenState extends State<SpeechScreen> {
     );
   }
 
-  Future<String> _checkAuth() async {
-    await Future.delayed(Duration(seconds: 10));
+  Future<bool> _checkAuth() async {
+    final String? token = await storage.read(key: 'token_sanctum');
+    
+    if (token != null) {
+      final bool isAuthenticated = await _authStore.getMe();
+      
+      return isAuthenticated;
+    }
 
-    return '';
+    return false;
   }
 }

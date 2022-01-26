@@ -59,9 +59,20 @@ abstract class _AuthStoreBase with Store {
   Future<bool> getMe() async
   {
     User? user = await _authRepository.getMe();
+    
+    if (user != null) {
+      setUser(user);
+      return true;
+    }
 
-    setUser(user!);
+    return false;
+  }
 
-    return true;
+  @action
+  Future logout() async 
+  {
+    setLoading(true);
+    await _authRepository.logout();
+    setLoading(false);
   }
 }

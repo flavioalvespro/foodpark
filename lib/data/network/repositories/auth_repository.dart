@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foodpark/data/network/dio_client.dart';
@@ -12,10 +15,12 @@ class AuthRepository {
   Future auth(String email, String password) async 
   {
     try {
+      String? deviceName = await getIdentifyDevice();
+
       final response = await _dio.post('auth/token', data: {
         'email': email,
         'password': password,
-        'device_name': 'teste'
+        'device_name': deviceName
       });
 
       print(response.data);
@@ -46,25 +51,51 @@ class AuthRepository {
   Future<User?> getMe() async 
   {
     final token = await storage.read(key: 'token_sanctum');
-
+    
     if (token != null) {
       _dio.options.headers['Authorization'] = 'Bearer ' + token;
     }
     
     try {
       
-      final response = await _dio.get('auth/me');
+      final response = await _dio.get('/me');
       return User.fromJson(response.data['data']);
 
     } on DioError catch (e) {
       print(e.toString());
     }
-
-    return null;
   }
 
   Future saveToken(String token) async
   {
     await storage.write(key: 'token_sanctum', value: token);
+  }
+
+  Future deleteToken() async
+  {
+    await storage.delete(key: 'token_sanctum');
+  }
+
+  Future logout() async 
+  {
+    await _dio.post('auth/logout');
+    await deleteToken();
+  }
+
+  Future<String?> getIdentifyDevice() async 
+  {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    if (Platform.isIOS) {
+    
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      return iosInfo.utsname.machine; 
+
+    } else {
+      
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.model;
+      
+    }
   }
 }
