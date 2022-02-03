@@ -1,12 +1,14 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foodpark/constants/api.dart';
 import 'package:foodpark/data/network/dio_client.dart';
 
 class OrderRepository {
 
-  var _httpClient;
+  DioClient _httpClient = new DioClient();
+  var  storage;
 
   OrderRepository() {
-    _httpClient = new DioClient();
+     storage = new FlutterSecureStorage();
   }
 
   Future makeOrder(String tokenCompany, List<Map<String, dynamic>> products, {String? comment}) async
@@ -18,5 +20,18 @@ class OrderRepository {
     });
 
     return response;
+  }
+
+  Future<List<dynamic>> getMyOrders() async
+  {
+    final token = await storage.read(key: 'token_sanctum');
+    
+    if (token != null) {
+      _httpClient.addTokenBearer(token);
+    }
+    
+    final response = await _httpClient.get("auth/v1/my-orders");
+    
+    return (response.data['data'] as List).toList();
   }
 }

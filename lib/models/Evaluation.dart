@@ -1,28 +1,30 @@
 import 'dart:convert';
 
+import 'package:foodpark/models/User.dart';
+
 class Evaluation {
 
-  String nameUser;
+  User user;
   String comment;
   double stars;
 
   Evaluation({
-    required this.nameUser,
+    required this.user,
     required this.comment,
     required this.stars
   });
 
   factory Evaluation.fromJson(jsonData) {
     return Evaluation(
-      nameUser: jsonData['nameUser'],
+      user: User.fromJson(jsonData['client']),
       comment: jsonData['comment'],
-      stars: jsonData['stars']
+      stars: double.parse(jsonData['stars'].toString())
     );
   }
 
   toJson() {
     return jsonEncode({
-      'nameUser': nameUser,
+      'user': user,
       'comment': comment,
       'stars': stars
     });

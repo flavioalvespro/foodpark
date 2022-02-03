@@ -63,7 +63,7 @@ class ProductCard extends StatelessWidget {
           ),
           Container(height: 7),
           Text(
-            "R\$ $product.price",
+            "R\$ ${product.price}",
             style: TextStyle(
                 color: Colors.black38,
                 fontSize: 12,

@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:foodpark/stores/orders.store.dart';
+import 'package:foodpark/widgets/custom_ciscular_progress_indicator.dart';
+import 'package:provider/provider.dart';
 
 import '../../widgets/bottom_navigator.dart';
 import '../../models/Order.dart';
 
 class OrdersScreen extends StatelessWidget {
   
-  List<Order> _orders = [
-    Order(date: '30/10/2021', identify: '123456', status: 'fechado', comment: 'dsadsadas', table: '1', total: 12, products: [], evaluations: []),
-    Order(date: '30/10/2021', identify: '123456', status: 'fechado', comment: 'dsadsadas', table: '1', total: 12, products: [], evaluations: []),
-    Order(date: '30/10/2021', identify: '123456', status: 'fechado', comment: 'dsadsadas', table: '1', total: 12, products: [], evaluations: []),
-    Order(date: '30/10/2021', identify: '123456', status: 'fechado', comment: 'dsadsadas', table: '1', total: 12, products: [], evaluations: []),
-    Order(date: '30/10/2021', identify: '123456', status: 'fechado', comment: 'dsadsadas', table: '1', total: 12, products: [], evaluations: []),
-    Order(date: '30/10/2021', identify: '123456', status: 'fechado', comment: 'dsadsadas', table: '1', total: 12, products: [], evaluations: []),
-    Order(date: '30/10/2021', identify: '123456', status: 'fechado', comment: 'dsadsadas', table: '1', total: 12, products: [], evaluations: []),
-  ];
+  late OrdersStore _ordersStore;
 
   @override
   Widget build(BuildContext context) {
+    
+    _ordersStore = Provider.of<OrdersStore>(context);
+    _ordersStore.getMyOrders();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Meus Pedidos'),
         centerTitle: true,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
-      body: _buildOrderScreen(context),
+      body: Observer(
+        builder: (context) => _buildOrderScreen(context),
+      ),
       bottomNavigationBar: BottomNavigator(1),
     );
   }
@@ -55,9 +57,10 @@ class OrdersScreen extends StatelessWidget {
     return Expanded(
       child: ListView.builder(
       //shrinkWrap: true,
-      itemCount: _orders.length,
+      itemCount: _ordersStore.orders.length,
       itemBuilder: (context, index) {
-        final Order order = _orders[index];
+        final Order order = _ordersStore.orders[index];
+        
         return _buildItemOrder(order, context);
       },
     )
@@ -74,7 +77,7 @@ class OrdersScreen extends StatelessWidget {
         data: IconThemeData(color: Theme.of(context).primaryColor)
       ),
       onTap: () {
-        Navigator.pushNamed(context, '/order-details');
+        Navigator.pushNamed(context, '/order-details', arguments: order);
       },
     );
   }

@@ -9,25 +9,14 @@ import '../../widgets/product_card.dart';
 // ignore: must_be_immutable
 class OrderDetailsScreen extends StatelessWidget {
   
-  Order _order = Order(
-    identify: 'fdsfsdds',
-    date: '30/11/2021',
-    status: 'open',
-    table: 'Mesa 1',
-    total: 45.7,
-    comment: 'Gostaria da pizza sem cebola',
-    products: [
-      Product(identify: '1', title: 'Pizza Grande', image: 'https://cdn.iconscout.com/icon/free/png-256/restaurant-1495593-1267764.png', price: '28.9', description: 'teste'),
-      Product(identify: '2', title: 'Pizza Pequena', image: 'https://cdn.iconscout.com/icon/free/png-256/restaurant-1495593-1267764.png', price: '28.9', description: 'teste'),
-      Product(identify: '2', title: 'Pizza Pequena', image: 'https://cdn.iconscout.com/icon/free/png-256/restaurant-1495593-1267764.png', price: '28.9', description: 'teste'),
-    ],
-    evaluations: [
-      //Evaluation(nameUser: 'Flávio Alves', comment: 'Muito bom, o molho da pizza é o diferencial', stars: 5)
-    ]
-  );
+  late Order _order;
 
   @override
   Widget build(BuildContext context) {
+
+    RouteSettings settings = ModalRoute.of(context)!.settings;
+    _order = settings.arguments as Order;
+
     return Container(
       height: 1000,
       child: Scaffold(
@@ -52,8 +41,7 @@ class OrderDetailsScreen extends StatelessWidget {
           _buildTextOrder('Data: ', _order.date),
           _buildTextOrder('Status: ', _order.status),
           _buildTextOrder('Total: ', _order.total.toString()),
-          _buildTextOrder('Mesa: ', _order.table),
-          _buildTextOrder('Comentário: ', _order.comment),
+          _order.comment != null ? _buildTextOrder('Comentário: ', _order.comment) : Container(),
           Container(height: 8,),
           Text('Produtos: ', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),),
           Container(height: 8,),
@@ -149,7 +137,7 @@ class OrderDetailsScreen extends StatelessWidget {
                         print(rating);
                       },
                   ),
-                  Text("${evaluation.nameUser} - ", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                  Text("${evaluation.user.name} - ", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
                   Text(evaluation.comment, style: TextStyle(color: Colors.black),)  
                 ],
               ),
